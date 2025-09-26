@@ -4,8 +4,8 @@ section .text
 ft_strcmp:
     mov     rax, 0          ; rax = return value
 .loop:
-    mov     al, [rdi]       ; load byte at s1 + rax
-    mov     dl, [rsi]       ; load byte at s2 + rbx
+    mov     al, [rdi]       ; load byte from s1
+    mov     dl, [rsi]       ; load byte from s2
     cmp     al, dl          ; check difference
     jne     .diff           ; if different, go to diff
     test    al, al          ; check if it's null terminator
