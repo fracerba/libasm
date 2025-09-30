@@ -17,10 +17,9 @@ ssize_t ft_write(int fd, const void *buf, size_t count);
 ssize_t ft_read(int fd, void *buf, size_t count);
 char    *ft_strdup(const char *s);
 
-ft_atoi_base();
-ft_list_push_front();
-ft_list_size();
-ft_list_sort();
-ft_list_remove_if();
+int     ft_atoi_base(char *str, char *base);
+void    ft_list_push_front(t_list **begin_list, void *data);
+int     ft_list_size(t_list *begin_list);
+void    ft_list_sort(t_list **begin_list, int (*cmp)());
 
 #endif
