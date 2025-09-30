@@ -1,8 +1,8 @@
 NAME = libasm.a
 
-SRCS = ft_strlen ft_strcpy ft_strcmp ft_write ft_read ft_strdup
+SRCS = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 
-BONUS = ft_atoi_base ft_list_push_front ft_list_size ft_list_sort
+BONUS = ft_atoi_base.s ft_list_push_front.s ft_list_size.s ft_list_sort.s
 
 OBJS = ${SRCS:.s=.o}
 
@@ -16,6 +16,8 @@ FLAGS = -f elf64 -g
 
 CFLAGS = -g -Wall -Wextra -Werror
 
+EXE = main
+
 .s.o: 
 	${CC} ${FLAGS} $< -o ${<:.s=.o}
 
@@ -23,18 +25,19 @@ $(NAME): ${OBJS}
 	ar rcs ${NAME} ${OBJS}
 
 test: main.c $(NAME)
-	gcc ${CFLAGS} main.c -L. -lasm -o main
+	gcc ${CFLAGS} main.c -L. -lasm -o ${EXE}
 
 bonus: ${OBJS_BON}
 	ar rcs ${NAME} ${OBJS_BON}	
 
-all: ${NAME}
+all: ${NAME} bonus test
 
 clean: 
 	${RM} ${OBJS} ${OBJS_BON}
 
 fclean: clean 
 	${RM} ${NAME}
+	${RM} ${EXE}
 
 re: fclean all
 
