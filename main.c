@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include "libasm.h"
 
 int main(int argc, char **argv) {
