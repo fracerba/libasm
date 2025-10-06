@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "libasm.h"
 
-int main(void) {
+int main(int argc, char **argv) {
     char src[] = "Hello, world!\n";
     char dest[20];
     char dest2[20];
@@ -80,7 +80,37 @@ int main(void) {
         perror("read");
     }
 
+    if (argc < 2 || strcmp(argv[1], "all") == 0)
+        return 0;
+
     printf("\n===== BONUS TESTS =====\n");
+    
+    t_list *list = NULL;
+    t_list *tmp;
+    int size;
+
+    printf("------ ft_atoi_base -------\n");
+    printf("Base 10: %d\n", ft_atoi_base("42", "0123456789"));
+    printf("Base 2: %d\n", ft_atoi_base("101010", "01"));
+    printf("Base 16: %d\n", ft_atoi_base("2A", "0123456789ABCDEF"));
+    printf("Invalid base (repeated chars): %d\n", ft_atoi_base("42", "0123401234"));
+    printf("Invalid base (only one char): %d\n", ft_atoi_base("42", "0"));
+    printf("\n");
+
+    printf("--- ft_list_push_front ----\n");
+    ft_list_push_front(&list, "First");
+    ft_list_push_front(&list, "Second");
+    ft_list_push_front(&list, "Third");
+    
+    tmp = list;
+    while (tmp) {
+        printf("Node data: %s\n", (char *)tmp->data);
+        tmp = tmp->next;
+    }
+    printf("\n");
+    
+    printf("------ ft_list_size -------\n");
+    printf("List size: %d\n", ft_list_size(list));
 
     return 0;
 }
