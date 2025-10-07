@@ -4,12 +4,12 @@ extern malloc
 
 section .text
 ft_strdup:
-    mov     r8, rdi                     ; rsi = src pointer
+    mov     r8, rdi                     ; rdi = src pointer
     xor     rcx, rcx                    ; rcx = counter
 .count:
     mov     dl, [r8 + rcx]              ; load byte at src + rcx
     test    dl, dl                      ; check for null terminator
-    jz      .alloc                      ; if zero, go to alloc
+    jz      .alloc                      ; if null, go to alloc
     inc     rcx                         ; else, increment counter
     jmp     .count                      ; repeat
 .alloc:

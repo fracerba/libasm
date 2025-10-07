@@ -1,16 +1,17 @@
 #include "libasm.h"
 
 int main(int argc, char **argv) {
-    char src[] = "Hello, world!\n";
-    char dest[20];
-    char dest2[20];
-    char *dup;
-    char *dup2;
+    char    src[] = "Hello, world!\n";
+    char    dest[20];
+    char    dest2[20];
+    char    *dup;
+    char    *dup2;
     ssize_t w_ret, r_ret;
-    char buf[50];
-    int cmp;
+    char    buf[50];
+    int     cmp;
 
     printf("===== MANDATORY TESTS =====\n");
+
     // ft_strlen
     printf("-------- ft_strlen --------\n");
     printf("ft_strlen: %lu\n", ft_strlen(src));
@@ -76,15 +77,16 @@ int main(int argc, char **argv) {
         perror("read");
     }
 
-    if (argc < 2 || strcmp(argv[1], "all") == 0)
+    if (argc < 2 || strcmp(argv[1], "all") != 0)
         return 0;
 
-    printf("\n===== BONUS TESTS =====\n");
-    
     t_list *list = NULL;
     t_list *tmp;
     int size;
+    
+    printf("\n===== BONUS TESTS =====\n");
 
+    // ft_atoi_base
     printf("------ ft_atoi_base -------\n");
     printf("Base 10: %d\n", ft_atoi_base("42", "0123456789"));
     printf("Base 2: %d\n", ft_atoi_base("101010", "01"));
@@ -95,6 +97,7 @@ int main(int argc, char **argv) {
     printf("Invalid base (only one char): %d\n", ft_atoi_base("42", "0"));
     printf("\n");
 
+    // ft_list_push_front
     printf("--- ft_list_push_front ----\n");
     ft_list_push_front(&list, "First");
     ft_list_push_front(&list, "Second");
@@ -106,7 +109,8 @@ int main(int argc, char **argv) {
         tmp = tmp->next;
     }
     printf("\n");
-    
+
+    // ft_list_size
     printf("------ ft_list_size -------\n");
     printf("List size: %d\n", ft_list_size(list));
 

@@ -9,9 +9,9 @@ ft_strcmp:
     cmp     al, dl          ; check difference
     jne     .diff           ; if different, go to diff
     test    al, al          ; check if it's null terminator
-    je      .done           ; if null, end
+    jz      .done           ; if null, end
     inc     rdi             ; else, move to next character in s1
-    inc     rsi             ; else, move to next character in s2
+    inc     rsi             ; move to next character in s2
     jmp     .loop           ; repeat
 .diff:
     movzx   eax, al         ; extend al to unsigned 32 bit

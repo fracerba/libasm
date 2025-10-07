@@ -26,6 +26,7 @@ $(NAME): ${OBJS}
 
 test: main.c $(NAME)
 	gcc ${CFLAGS} main.c -L. -lasm -o ${EXE}
+	./${EXE} all
 
 bonus: ${OBJS_BON}
 	ar rcs ${NAME} ${OBJS_BON}	
