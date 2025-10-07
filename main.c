@@ -88,6 +88,8 @@ int main(int argc, char **argv) {
     printf("------ ft_atoi_base -------\n");
     printf("Base 10: %d\n", ft_atoi_base("42", "0123456789"));
     printf("Base 2: %d\n", ft_atoi_base("101010", "01"));
+    printf("Base 4: %d\n", ft_atoi_base("222", "0123"));
+    printf("Base 8: %d\n", ft_atoi_base("52", "01234567"));
     printf("Base 16: %d\n", ft_atoi_base("2A", "0123456789ABCDEF"));
     printf("Invalid base (repeated chars): %d\n", ft_atoi_base("42", "0123401234"));
     printf("Invalid base (only one char): %d\n", ft_atoi_base("42", "0"));

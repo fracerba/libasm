@@ -7,7 +7,7 @@ ft_strdup:
     mov     r8, rdi                     ; rsi = src pointer
     xor     rcx, rcx                    ; rcx = counter
 .count:
-    mov     dl, [r8 + rcx]             ; load byte at src + rcx
+    mov     dl, [r8 + rcx]              ; load byte at src + rcx
     test    dl, dl                      ; check for null terminator
     jz      .alloc                      ; if zero, go to alloc
     inc     rcx                         ; else, increment counter
@@ -21,7 +21,7 @@ ft_strdup:
     mov     rdx, rax                    ; rdx = dest pointer
     mov     rcx, 0                      ; rcx = index
 .loop:
-    mov     al, [r8 + rcx]             ; load byte from src
+    mov     al, [r8 + rcx]              ; load byte from src
     mov     [rdx + rcx], al             ; store byte to dest
     test    al, al                      ; check for null terminator
     jz      .end                        ; if null, go to end
