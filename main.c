@@ -82,7 +82,6 @@ int main(int argc, char **argv) {
 
     t_list *list = NULL;
     t_list *tmp;
-    int size;
     
     printf("\n===== BONUS TESTS =====\n");
 

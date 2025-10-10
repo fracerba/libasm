@@ -31,8 +31,8 @@ ft_strdup:
     mov     rax, rdx                    ; return pointer to duplicated string
     ret
 .error:
-    mov     eax, 12                     ; set errno to ENOMEM (12)
+    mov     edi, 12                     ; set errno to ENOMEM (12)
     call    __errno_location wrt ..plt  ; get pointer to errno
-    mov     [rax], eax                  ; store eax in errno
+    mov     [rax], edi                  ; store error code in errno
     mov     rax, 0                      ; return NULL
     ret

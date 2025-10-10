@@ -10,7 +10,8 @@ ft_read:
     ret                                 ; on success, return
 .error:
     neg     rax                         ; get positive error code
+    mov     edi, eax                    ; save error code in edi
     call    __errno_location wrt ..plt  ; get pointer to errno
-    mov     [rax], eax                  ; store error code in errno
+    mov     [rax], edi                  ; store error code in errno
     mov     rax, -1                     ; return -1 on error
     ret

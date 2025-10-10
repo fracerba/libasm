@@ -2,10 +2,105 @@ global ft_atoi_base
 
 section .text
 ft_atoi_base:
-    mov     rax, 0          ; rax = return value, buffer
-    mov     rcx, 0          ; rcx = src counter
+    mov     rax, 0          ; rax = return value, str buffer
+    mov     rcx, -1         ; rcx = src counter
     mov     rdx, 0          ; rdx = base counter
     mov     r8, 0           ; r8 = number
-    mov     r9, 0           ; r9 = sign
+    mov     r9, 1           ; r9 = sign
     mov     r10, 0          ; r10 = base
-    mov     r11, 0          ; r11 = digit
+.start:
+    test    rdi, rdi        ; 
+    jz      .error          ;
+    test    rsi, rsi        ;
+    jz      .error          ;
+.length:
+    mov     al, [rsi + r10] ; load byte at s + rax
+    test    al, al          ; check if it's null
+    jz      .checklen       ; if null, end
+    cmp     al, 9           ;
+    je      .error          ;
+    cmp     al, 10          ;
+    je      .error          ;
+    cmp     al, 11          ;
+    je      .error          ;
+    cmp     al, 12          ;
+    je      .error          ;
+    cmp     al, 13          ;
+    je      .error          ;
+    cmp     al, 32          ;
+    je      .error          ;
+    cmp     al, 43          ;
+    je      .error          ;
+    cmp     al, 45          ;
+    je      .error          ;
+    mov     rdx, r10        ;
+.checkdup:
+    inc     rdx             ;
+    mov     ah, [rsi + rdx] ;
+    test    ah, ah          ;
+    jz      .loop           ;
+    cmp     al, ah          ;
+    je      .error          ;
+    jmp     .checkdup       ;
+.loop:
+    inc     r10             ; else, increment counter
+    jmp     .length         ; repeat
+.checklen:
+    cmp     r10, 2          ;
+    jl      .error          ;
+.checkspaces:
+    inc     rcx             ;
+    mov     al, [rdi + rcx] ; load byte at s + rax
+    test    al, al          ; check if it's null
+    jz      .error          ; if null, end
+    cmp     al, 9           ;
+    je      .checkspaces    ;
+    cmp     al, 10          ;
+    je      .checkspaces    ;
+    cmp     al, 11          ;
+    je      .checkspaces    ;
+    cmp     al, 12          ;
+    je      .checkspaces    ;
+    cmp     al, 13          ;
+    je      .checkspaces    ;
+    cmp     al, 32          ;
+    je      .checkspaces    ;
+.checksign:
+    cmp     al, 43          ;
+    je      .handleplus     ;
+    cmp     al, 45          ;
+    je      .handleminus    ;
+    jmp     .checknum       ;
+.handleminus:
+    neg     r9              ;
+.handleplus:
+    inc     rcx             ;
+    jmp     .checknum       ;
+.checknum:
+    mov     al, [rdi + rcx] ; load byte at s + rax
+    test    al, al          ; check if it's null
+    jz      .return         ; if null, end
+    mov     rax, r10        ;
+    mul     r8              ;
+    mov     r8, rax         ;
+    mov     al, [rdi + rcx] ; load byte at s + rax
+    mov     rdx, 0          ;
+.findvalue:
+    mov     ah, [rsi + rdx] ;
+    test    ah, ah          ;
+    jz      .return         ;
+    cmp     ah, al          ;
+    je      .addnum         ;
+    inc     rdx             ;
+    jmp     .findvalue      ;
+.addnum:
+    add     r8, rdx         ;
+    inc     rcx             ;
+    jmp     .checknum       ;
+.return:
+    mov     rax, r9         ;
+    mul     r8              ;
+    ret
+.error:
+    mov     rax, 0          ;
+    ret
