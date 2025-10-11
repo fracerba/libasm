@@ -20,13 +20,13 @@ ft_strdup:
     jz      .error                      ; if NULL, handle error
     mov     rdx, rax                    ; rdx = dest pointer
     mov     rcx, 0                      ; rcx = index
-.loop:
+.while:
     mov     al, [r8 + rcx]              ; load byte from src
     mov     [rdx + rcx], al             ; store byte to dest
     test    al, al                      ; check for null terminator
     jz      .end                        ; if null, go to end
     inc     rcx                         ; else, move to next character in src
-    jmp     .loop                       ; repeat
+    jmp     .while                      ; repeat
 .end:
     mov     rax, rdx                    ; return pointer to duplicated string
     ret
