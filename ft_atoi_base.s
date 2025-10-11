@@ -7,26 +7,24 @@ ft_atoi_base:
     mov     rdx, 0          ; rdx = base counter
     mov     r8, 0           ; r8 = number
     mov     r9, 1           ; r9 = sign
-    mov     r10, 0          ; r10 = base
+    mov     r10, -1         ; r10 = base
 .start:
     test    rdi, rdi        ; 
     jz      .error          ;
     test    rsi, rsi        ;
     jz      .error          ;
 .length:
+    inc     r10             ; else, increment counter
     mov     al, [rsi + r10] ; load byte at s + rax
     test    al, al          ; check if it's null
     jz      .checklen       ; if null, end
-    cmp     al, 9           ;
-    je      .error          ;
-    cmp     al, 10          ;
-    je      .error          ;
-    cmp     al, 11          ;
-    je      .error          ;
-    cmp     al, 12          ;
-    je      .error          ;
-    cmp     al, 13          ;
-    je      .error          ;
+    cmp     al, 8           ;
+    jg      .lengthaux      ;
+    mov     rdx, r10        ;
+    jmp     .checkdup       ;
+.lengthaux
+    cmp     al, 14          ;
+    jl      .error          ;
     cmp     al, 32          ;
     je      .error          ;
     cmp     al, 43          ;
@@ -38,13 +36,10 @@ ft_atoi_base:
     inc     rdx             ;
     mov     ah, [rsi + rdx] ;
     test    ah, ah          ;
-    jz      .loop           ;
+    jz      .length         ;
     cmp     al, ah          ;
     je      .error          ;
     jmp     .checkdup       ;
-.loop:
-    inc     r10             ; else, increment counter
-    jmp     .length         ; repeat
 .checklen:
     cmp     r10, 2          ;
     jl      .error          ;
@@ -53,16 +48,12 @@ ft_atoi_base:
     mov     al, [rdi + rcx] ; load byte at s + rax
     test    al, al          ; check if it's null
     jz      .error          ; if null, end
-    cmp     al, 9           ;
-    je      .checkspaces    ;
-    cmp     al, 10          ;
-    je      .checkspaces    ;
-    cmp     al, 11          ;
-    je      .checkspaces    ;
-    cmp     al, 12          ;
-    je      .checkspaces    ;
-    cmp     al, 13          ;
-    je      .checkspaces    ;
+    cmp     al, 8           ;
+    jg      .checkspacesaux ;
+    jmp     .checksign      ;
+.checkspacesaux
+    cmp     al, 14          ;
+    jl      .checkspaces    ;
     cmp     al, 32          ;
     je      .checkspaces    ;
 .checksign:
