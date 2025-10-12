@@ -2,7 +2,7 @@ NAME = libasm.a
 
 SRCS = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s ft_strdup.s
 
-BONUS = ft_atoi_base.s ft_list_push_front.s ft_list_size.s
+BONUS = ft_atoi_base.s ft_list_push_front.s ft_list_size.s ft_list_sort.s ft_list_remove_if.s
 
 OBJS = ${SRCS:.s=.o}
 
@@ -26,12 +26,13 @@ $(NAME): ${OBJS}
 
 test: main.c $(NAME)
 	gcc ${CFLAGS} main.c -L. -lasm -o ${EXE}
-	./${EXE} all
 
 bonus: ${OBJS_BON}
 	ar rcs ${NAME} ${OBJS_BON}	
 
-all: ${NAME} bonus test
+mandatory: ${OBJS} test ./${EXE}
+
+all: ${NAME} bonus test ./${EXE} all
 
 clean: 
 	${RM} ${OBJS} ${OBJS_BON}
