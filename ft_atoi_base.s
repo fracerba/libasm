@@ -71,9 +71,7 @@ ft_atoi_base:
     mov     al, [rdi + rcx]     ; load byte at s + rax
     test    al, al              ; check if it's null
     jz      .return             ; if null, end
-    mov     rax, r10            ;
-    imul    r8                  ;
-    mov     r8, rax             ;
+    imul    r8, r10             ;
     mov     al, [rdi + rcx]     ; load byte at s + rax
     mov     rdx, 0              ;
 .find_value:
@@ -89,8 +87,8 @@ ft_atoi_base:
     inc     rcx                 ;
     jmp     .check_num          ;
 .return:
-    mov     rax, r9             ;
-    imul    r8                  ;
+    mov     rax, r8             ;
+    imul    rax, r9             ;
     ret
 .error:
     mov     rax, 0              ;

@@ -31,6 +31,6 @@ ft_list_push_front:
     call    __errno_location wrt ..plt  ; get pointer to errno
     mov     edi, 12                     ; set errno to ENOMEM (12)
     mov     [rax], edi                  ; store error code in errno
-    pop     rbx                         ;
     pop     rsi                         ;
+    pop     rbx                         ;
     ret
