@@ -30,9 +30,11 @@ test: main.c $(NAME)
 bonus: ${OBJS_BON}
 	ar rcs ${NAME} ${OBJS_BON}	
 
-mandatory: ${OBJS} test ./${EXE}
+mandatory: ${NAME} bonus test 
+	./${EXE}
 
-all: ${NAME} bonus test ./${EXE} all
+all: ${NAME} bonus test 
+	./${EXE} all
 
 clean: 
 	${RM} ${OBJS} ${OBJS_BON}

@@ -4,10 +4,11 @@ extern malloc
 
 section .text
 ft_strdup:
-    mov     r8, rdi                     ; rdi = src pointer
+    push    rbx                         ;
+    mov     rbx, rdi                    ; rdi = src pointer
     xor     rcx, rcx                    ; rcx = counter
 .count:
-    mov     dl, [r8 + rcx]              ; load byte at src + rcx
+    mov     dl, [rbx + rcx]             ; load byte at src + rcx
     test    dl, dl                      ; check for null terminator
     jz      .alloc                      ; if null, go to alloc
     inc     rcx                         ; else, increment counter
@@ -21,7 +22,7 @@ ft_strdup:
     mov     rdx, rax                    ; rdx = dest pointer
     mov     rcx, 0                      ; rcx = index
 .while:
-    mov     al, [r8 + rcx]              ; load byte from src
+    mov     al, [rbx + rcx]             ; load byte from src
     mov     [rdx + rcx], al             ; store byte to dest
     test    al, al                      ; check for null terminator
     jz      .end                        ; if null, go to end
@@ -29,10 +30,12 @@ ft_strdup:
     jmp     .while                      ; repeat
 .end:
     mov     rax, rdx                    ; return pointer to duplicated string
+    pop     rbx                         ;
     ret
 .error:
-    mov     edi, 12                     ; set errno to ENOMEM (12)
     call    __errno_location wrt ..plt  ; get pointer to errno
+    mov     edi, 12                     ; set errno to ENOMEM (12)
     mov     [rax], edi                  ; store error code in errno
     mov     rax, 0                      ; return NULL
+    pop     rbx                         ;
     ret

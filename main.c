@@ -1,11 +1,20 @@
 #include "libasm.h"
 
+void print_list(t_list *list) {
+    t_list *tmp = list;
+    while (tmp) {
+        printf("Node data: %s\n", (char *)tmp->data);
+        tmp = tmp->next;
+    }
+}
+
 int main(int argc, char **argv) {
     char    src[] = "Hello, world!\n";
     char    dest[20];
     char    dest2[20];
     char    *dup;
     char    *dup2;
+    char    *dup3;
     ssize_t w_ret, r_ret;
     char    buf[50];
     int     cmp;
@@ -81,7 +90,6 @@ int main(int argc, char **argv) {
         return 0;
 
     t_list *list = NULL;
-    t_list *tmp;
     
     printf("\n===== BONUS TESTS =====\n");
 
@@ -98,20 +106,38 @@ int main(int argc, char **argv) {
 
     // ft_list_push_front
     printf("--- ft_list_push_front ----\n");
-    ft_list_push_front(&list, "First");
-    ft_list_push_front(&list, "Second");
-    ft_list_push_front(&list, "Third");
-    
-    tmp = list;
-    while (tmp) {
-        printf("Node data: %s\n", (char *)tmp->data);
-        tmp = tmp->next;
-    }
+    dup = ft_strdup("First");
+    dup2 = ft_strdup("Second");
+    dup3 = ft_strdup("Third");
+    ft_list_push_front(&list, dup);
+    ft_list_push_front(&list, dup2);
+    ft_list_push_front(&list, dup3);
+    print_list(list);
     printf("\n");
 
     // ft_list_size
     printf("------ ft_list_size -------\n");
     printf("List size: %d\n", ft_list_size(list));
+    printf("\n");
 
+    // ft_list_sort
+    // printf("------ ft_list_sort -------\n");
+    // ft_list_sort(&list, (int (*)(const void *, const void *))strcmp);
+    // print_list(list);
+    // printf("\n");
+
+    // ft_list_remove_if
+    // printf("---- ft_list_remove_if ----\n");
+    // ft_list_remove_if(&list, "Second", (int (*)(const void *, const void *))strcmp, free);
+    // print_list(list);
+    // printf("\n");
+
+    while (list)
+    {
+        t_list *tmp = list;
+        list = list->next;
+        free(tmp->data);
+        free(tmp);
+    }
     return 0;
 }
