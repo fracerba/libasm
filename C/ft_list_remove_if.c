@@ -25,18 +25,21 @@ void    ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), voi
 
     while (tmp)
     {
-        next = tmp -> next;
         if (!cmp(tmp->data, data_ref))
         {
             free_fct(tmp -> data);
+            next = tmp -> next;
             free(tmp);
             if (prev)
                 prev -> next = next;
             else
                 *begin_list = next;
+            tmp = next;
         }
         else
+        {
             prev = tmp;
-        tmp = next;
+            tmp = tmp -> next;
+        }
     }
 }

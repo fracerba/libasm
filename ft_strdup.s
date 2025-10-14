@@ -35,7 +35,7 @@ ft_strdup:
 .error:
     call    __errno_location wrt ..plt  ; get pointer to errno
     mov     edi, 12                     ; set errno to ENOMEM (12)
-    mov     [rax], edi                  ; store error code in errno
+    mov     dword [rax], edi            ; store error code in errno
     mov     rax, 0                      ; return NULL
     pop     rbx                         ;
     ret

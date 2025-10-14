@@ -27,9 +27,7 @@ ft_list_sort:
     jz      .repeat                     ; if list pointer is NULL, return
     mov     rdi, [r12]                  ;
     mov     rsi, [r13]                  ; 
-    sub     rsp, 8                      ;
     call    rbx                         ;
-    add     rsp, 8                      ;
     cmp     rax, 0                      ;
     jg      .swap                       ;
     jmp     .repeat_next                ;

@@ -14,6 +14,6 @@ ft_write:
     push    rdi                         ;
     call    __errno_location wrt ..plt  ; get pointer to errno
     pop     rdi                         ;
-    mov     [rax], edi                  ; store error code in errno
+    mov     dword [rax], edi            ; store error code in errno
     mov     rax, -1                     ; return -1 on error
     ret

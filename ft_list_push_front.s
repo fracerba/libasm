@@ -10,9 +10,11 @@ ft_list_push_front:
     push    rsi                         ;
     mov     rbx, rdi                    ; save begin_list pointer in rbx
     mov     rdi, 16                     ; number of bytes to allocate
+    sub     rsp, 8                      ;
     call    malloc wrt ..plt            ; call malloc
     test    rax, rax                    ; check if malloc failed
     jz      .error                      ; if NULL, handle error
+    add     rsp, 8                      ;
     pop     rsi                         ;
     mov     [rax], rsi                  ; new->data = data
     mov     rdx, [rbx]                  ; rdx = *begin_list (old head)
@@ -29,8 +31,9 @@ ft_list_push_front:
     ret
 .error:
     call    __errno_location wrt ..plt  ; get pointer to errno
+    add     rsp, 8                      ;
     mov     edi, 12                     ; set errno to ENOMEM (12)
-    mov     [rax], edi                  ; store error code in errno
+    mov     dword [rax], edi            ; store error code in errno
     pop     rsi                         ;
     pop     rbx                         ;
     ret
