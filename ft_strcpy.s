@@ -7,9 +7,9 @@ ft_strcpy:
     mov     dl, [rsi]       ; load byte from src
     mov     [rdi], dl       ; load character in dest
     test    dl, dl          ; check if it's null 
-    jz      .done           ; if null, go to done
-    inc     rdi             ; else, move to next character in dest
-    inc     rsi             ; move to next character in src
+    jz      .done           ; if null, finish
+    inc     rdi             ; advance dest pointer
+    inc     rsi             ; advance src pointer
     jmp     .while          ; repeat
 .done:
     ret
