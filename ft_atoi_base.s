@@ -4,7 +4,7 @@ section .text
 ft_atoi_base:
     mov     rax, 0              ; rax = return value / temp
     mov     rcx, -1             ; rcx = str index (will be incremented before use)
-    mov     rdx, 0              ; rdx = temp/index for base scanning
+    mov     rdx, 0              ; rdx = temp/base index
     mov     r8, 0               ; r8 = accumulated number
     mov     r9, 1               ; r9 = sign (1 or -1)
     mov     r10, -1             ; r10 = base length counter
@@ -17,26 +17,26 @@ ft_atoi_base:
     inc     r10                 ; increment base length counter
     mov     al, [rsi + r10]     ; al = base[r10]
     test    al, al              ; if base[r10] == 0 -> end of base string
-    jz      .checklen           ; check base length
-    cmp     al, 8               ; if al <= 8 (control)
-    jg      .length_aux         ; continue checking
-    mov     rdx, r10            ; rdx = base length
+    jz      .checklen           ;   check base length
+    cmp     al, 8               ; if (al > 8)
+    jg      .length_aux         ;   continue checking
+    mov     rdx, r10            ; rdx = current length
     jmp     .check_dup          ; check duplicates
 .length_aux:
-    cmp     al, 14              ; invalid control chars < 14
-    jl      .error              ;   error
-    cmp     al, 32              ; space invalid
-    je      .error              ;   error
-    cmp     al, 43              ; '+' invalid
-    je      .error              ;   error
-    cmp     al, 45              ; '-' invalid
-    je      .error              ;   error
-    mov     rdx, r10            ; rdx = base length
+    cmp     al, 14              ; if (al < 14)
+    jl      .error              ;   return 0
+    cmp     al, 32              ; if (al == ' ')
+    je      .error              ;   return 0
+    cmp     al, 43              ; if (al == '+')
+    je      .error              ;   return 0
+    cmp     al, 45              ; if (al == '-')
+    je      .error              ;   return 0
+    mov     rdx, r10            ; rdx = current length
 .check_dup:
     inc     rdx                 ; check duplicates: compare base[r10] with following chars
     mov     ah, [rsi + rdx]     ; ah = base[rdx]
     test    ah, ah              ; if ah == 0 -> end of base string
-    jz      .length             ; no duplicate for this char, continue scanning base
+    jz      .length             ;   no duplicate for this char, continue scanning base
     cmp     al, ah              ; compare base[r10] with base[rdx]
     je      .error              ; duplicate found -> error
     jmp     .check_dup          ; continue checking duplicates
@@ -47,20 +47,20 @@ ft_atoi_base:
     inc     rcx                 ; skip leading whitespace in str
     mov     al, [rdi + rcx]     ; al = str[rcx]
     test    al, al              ; if (al == 0)
-    jz      .error              ; if end of string, return 0
+    jz      .error              ;   return 0
     cmp     al, 8               ; check for whitespace characters
-    jg      .check_spaces_aux   ; if al > 8, check next
-    jmp     .check_sign         ; is whitespace, continue skipping
+    jg      .check_spaces_aux   ; if al > 8, continue checking
+    jmp     .check_sign         ; move to sign checking
 .check_spaces_aux:
     cmp     al, 14              ; if al < 14, it's whitespace
     jl      .check_spaces       ; continue skipping
     cmp     al, 32              ; if al == 32 (space)
     je      .check_spaces       ; continue skipping
 .check_sign:
-    cmp     al, 43              ; '+'
-    je      .handle_plus        ; handle plus sign
-    cmp     al, 45              ; '-'
-    je      .handle_minus       ; handle minus sign
+    cmp     al, 43              ; if (al == '+')
+    je      .handle_plus        ;   handle plus sign
+    cmp     al, 45              ; if (al == '-')
+    je      .handle_minus       ;   handle minus sign
     jmp     .check_num          ; no sign, continue parsing number
 .handle_minus:
     neg     r9                  ; sign = -1
@@ -71,12 +71,11 @@ ft_atoi_base:
     mov     al, [rdi + rcx]     ; al = str[rcx]
     test    al, al              ; if (al == 0)
     jz      .return             ; end of string -> return accumulated value
-    mov     al, [rdi + rcx]     ; reload al
     mov     rdx, 0              ; rdx = index into base for search
 .find_value:
     mov     ah, [rsi + rdx]     ; ah = base[rdx]
     test    ah, ah              ; if (ah == 0)
-    jz      .return             ; char not found in base -> finish parsing
+    jz      .return             ; char not found in base -> finish parsing and return
     cmp     ah, al              ; compare base[rdx] with current char
     je      .add_num            ; match found
     inc     rdx                 ; advance base index
