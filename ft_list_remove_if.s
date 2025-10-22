@@ -25,11 +25,11 @@ ft_list_remove_if:
     mov     rbx, rdx        ; rbx = cmp function pointer
     mov     r8, 0           ; r8 = prev (NULL)
 .while:
-    test    r12, r12        ; while (tmp != NULL)
-    jz      .restore        ;   break
+    test    r12, r12        ; if (current == NULL)
+    jz      .restore        ;   restore and return  
     mov     rdi, [r12]      ; rdi = tmp->data
     mov     rsi, r14        ; rsi = data_ref
-    push    r8              ; preserve prev on stack (align & save)
+    push    r8              ; preserve prev on stack
     sub     rsp, 8          ; align stack before calling cmp
     call    rbx             ; cmp(tmp->data, data_ref)
     cmp     rax, 0          ; if (cmp == 0)
@@ -45,14 +45,14 @@ ft_list_remove_if:
     add     rsp, 8          ; undo the sub before call (stack balanced)
     mov     rdi, r12        ; rdi = node to free
     mov     r9, [r12 + 8]   ; r9 = next = tmp->next
-    push    r9              ; push next as argument for free (align for call)
+    push    r9              ; preserve next on stack (save & align)
     call    free wrt ..plt  ; free(node)
-    pop     r9              ; remove pushed next
-    pop     r8              ; restore prev
+    pop     r9              ; restore next from stack
+    pop     r8              ; restore prev from stack
     cmp     r8, 0           ; if (prev == NULL)
     jz      .move_begin     ;   move begin_list
     mov     [r8 + 8], r9    ; prev->next = next
-    jmp     .repeat         ; continue loop
+    jmp     .repeat         ; advance tmp to next
 .move_begin:
     mov     [r13], r9       ; *begin_list = next
 .repeat:

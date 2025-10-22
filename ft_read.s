@@ -5,8 +5,8 @@ section .text
 ft_read:
     mov     rax, 0                      ; syscall number for read
     syscall                             ; perform the syscall
-    cmp     rax, 0                      ; compare return value with 0
-    jl      .error                      ; if negative (error), jump to error handler
+    cmp     rax, 0                      ; if rax < 0, an error occurred
+    jl      .error                      ; jump to error handler
     ret                                 ; on success, return value in rax
 .error:
     neg     rax                         ; make error code positive

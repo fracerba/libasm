@@ -28,8 +28,8 @@ ft_list_sort:
     mov     rdi, [r12]                  ; rdi = current->data
     mov     rsi, [r13]                  ; rsi = next->data
     call    rbx                         ; call cmp(current->data, next->data)
-    cmp     rax, 0                      ; compare cmp result to 0
-    jg      .swap                       ; if >0, swap the data pointers
+    cmp     rax, 0                      ; compare result to 0
+    jg      .swap                       ; if result > 0, swap the data pointers
     jmp     .repeat_next                ; otherwise continue inner loop
 .swap:
     mov     rcx, [r12]                  ; rcx = current->data

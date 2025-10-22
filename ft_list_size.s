@@ -5,7 +5,7 @@ ft_list_size:
     mov     rax, 0          ; rax = element counter (return value)
 .while:
     test    rdi, rdi        ; if (list == NULL)
-    jz      .done           ;   return 0
+    jz      .done           ;   return counter
     inc     rax             ; increment counter
     mov     rdi, [rdi + 8]  ; load pointer to next node
     jmp     .while          ; continue loop

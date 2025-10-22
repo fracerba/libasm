@@ -4,8 +4,8 @@ extern malloc
 
 section .text
 ft_list_push_front:
-    test    rdi, rdi                    ; check if begin_list pointer is NULL
-    jz      .end                        ; if begin_list is NULL, return
+    test    rdi, rdi                    ; if (begin_list == NULL)
+    jz      .end                        ;   return
     push    rbx                         ; save callee-saved registers
     push    rsi                         ; save data argument across malloc
     mov     rbx, rdi                    ; save begin_list pointer in rbx
