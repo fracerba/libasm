@@ -83,7 +83,7 @@ ft_atoi_base:
 .add_num:
     imul    r8, r10             ; r8 *= base_length
     add     r8, rdx             ; r8 += digit_value
-    inc     rcx                 ; advance input index
+    inc     rcx                 ; advance src index
     jmp     .check_num          ; continue parsing number
 .return:
     mov     rax, r8             ; rax = accumulated number
