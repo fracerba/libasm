@@ -24,17 +24,20 @@ EXE = main
 $(NAME): ${OBJS}
 	ar rcs ${NAME} ${OBJS}
 
-test: main.c $(NAME)
-	gcc ${CFLAGS} main.c -L. -lasm -o ${EXE}
+main: mandatory.c $(NAME)
+	gcc ${CFLAGS} mandatory.c -L. -lasm -o ${EXE}
+
+full: bonus.c $(NAME)
+	gcc ${CFLAGS} bonus.c -L. -lasm -o ${EXE}
 
 bonus: ${OBJS_BON}
 	ar rcs ${NAME} ${OBJS_BON}	
 
-mandatory: ${NAME} bonus test 
+mandatory: ${NAME} bonus main
 	./${EXE}
 
-all: ${NAME} bonus test 
-	./${EXE} all
+all: ${NAME} bonus full
+	./${EXE}
 
 clean: 
 	${RM} ${OBJS} ${OBJS_BON}
