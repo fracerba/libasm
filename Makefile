@@ -16,7 +16,7 @@ FLAGS = -f elf64 -g
 
 CFLAGS = -g -Wall -Wextra -Werror
 
-EXE = main
+EXE = ./main
 
 .s.o: 
 	${CC} ${FLAGS} $< -o ${<:.s=.o}
@@ -33,11 +33,11 @@ full: bonus.c $(NAME)
 bonus: ${OBJS_BON}
 	ar rcs ${NAME} ${OBJS_BON}	
 
-mandatory: ${NAME} bonus main
-	./${EXE}
+mandatory: ${NAME} main
+	${EXE}
 
 all: ${NAME} bonus full
-	./${EXE}
+	${EXE}
 
 clean: 
 	${RM} ${OBJS} ${OBJS_BON}
