@@ -20,53 +20,45 @@ void print_read(ssize_t r_ret, char *buf, char *str) {
 
 int main() {
 	char	src[] = "Hello, world!\n";
-	char	*file = "test.txt";
 	char	dest[20];
 	char	dest2[20];
+	
+	int		cmp;
+
+	char	*file = "test.txt";
+	int		fd;
+	ssize_t	w_ret;
+
+	ssize_t	r_ret;
+	char	buf[50];
+
 	char	*dup;
 	char	*dup2;
-	ssize_t w_ret, r_ret;
-	char	buf[50];
-	int	 cmp, fd;
 
 	printf("===== MANDATORY TESTS =====\n");
 
 	// ft_strlen
 	printf("-------- ft_strlen --------\n");
 	printf("ft_strlen: %lu\n", ft_strlen(src));
+
 	printf("strlen: %lu\n", strlen(src));
 	printf("\n");
 
 	// ft_strcpy
 	printf("-------- ft_strcpy --------\n");
-	ft_strcpy(dest, src);
-	printf("ft_strcpy: %s", dest);
-	strcpy(dest2, src);
-	printf("strcpy: %s", dest2);
+	printf("ft_strcpy: %s", ft_strcpy(dest, src));
+
+	printf("strcpy: %s", strcpy(dest2, src));
 	printf("\n");
 
 	// ft_strcmp
 	printf("-------- ft_strcmp --------\n");
-	cmp = ft_strcmp(src, dest);
-	printf("ft_strcmp: %d\n", cmp);
-	cmp = ft_strcmp(src, "Hello");
-	printf("ft_strcmp (diff): %d\n", cmp);
+	printf("ft_strcmp: %d\n", ft_strcmp(src, dest));
+	printf("ft_strcmp (diff): %d\n", ft_strcmp(src, "Hello"));
 	printf("\n");
 
-	cmp = strcmp(src, dest2);
-	printf("strcmp: %d\n", cmp);
-	cmp = strcmp(src, "Hello");
-	printf("strcmp (diff): %d\n", cmp);
-	printf("\n");
-
-	// ft_strdup
-	printf("-------- ft_strdup --------\n");
-	dup = ft_strdup(src);
-	printf("ft_strdup: %s", dup);
-	free(dup);
-	dup2 = strdup(src);
-	printf("strdup: %s", dup2);
-	free(dup2);
+	printf("strcmp: %d\n", strcmp(src, dest2));
+	printf("strcmp (diff): %d\n", strcmp(src, "Hello"));
 	printf("\n");
 
 	// ft_write
@@ -123,6 +115,17 @@ int main() {
 	r_ret = read(fd, buf, sizeof(buf)-1);
 	print_read(r_ret, buf, "read from file");
 	close(fd);
+	printf("\n");
+
+	// ft_strdup
+	printf("-------- ft_strdup --------\n");
+	dup = ft_strdup(src);
+	printf("ft_strdup: %s", dup);
+	free(dup);
+
+	dup2 = strdup(src);
+	printf("strdup: %s", dup2);
+	free(dup2);
 	printf("\n");
 
 	return (0);
