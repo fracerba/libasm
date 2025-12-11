@@ -16,36 +16,37 @@ FLAGS = -f elf64 -g
 
 CFLAGS = -g -Wall -Wextra -Werror
 
-EXE = ./main
+EXE = test
 
-.s.o: 
-	${CC} ${FLAGS} $< -o ${<:.s=.o}
+%.o: %.s
+	${CC} ${FLAGS} $< -o $@
 
 $(NAME): ${OBJS}
 	ar rcs ${NAME} ${OBJS}
 
-main: mandatory.c $(NAME)
+bonus: .bonus
+
+.bonus: ${OBJS} ${OBJS_BON}
+	ar rcs ${NAME} ${OBJS} ${OBJS_BON}
+	touch .bonus
+
+all: ${NAME}
+
+test: re
 	gcc ${CFLAGS} mandatory.c -L. -lasm -o ${EXE}
+	./${EXE}
 
-full: bonus.c $(NAME)
-	gcc ${CFLAGS} bonus.c -L. -lasm -o ${EXE}
-
-bonus: ${OBJS_BON}
-	ar rcs ${NAME} ${OBJS_BON}	
-
-mandatory: ${NAME} main
-	${EXE}
-
-all: ${NAME} bonus full
-	${EXE}
+test_all: fclean bonus
+	gcc ${CFLAGS} main.c -L. -lasm -o ${EXE}
+	./${EXE}
 
 clean: 
 	${RM} ${OBJS} ${OBJS_BON}
 
 fclean: clean 
-	${RM} ${NAME}
+	${RM} ${NAME} .bonus
 	${RM} ${EXE}
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus test test_all
