@@ -1,5 +1,107 @@
 #include "libasm.h"
 
+void print_strlen(const char *s) {
+	printf("ft_strlen: %lu\t", ft_strlen(s));
+	printf(" | ");
+	printf("strlen: %lu\n", strlen(s));
+}
+
+void print_strcpy(char *dest, const char *src) {
+	char *tab = strcmp(src, "") ? "" : "\t\t";
+
+	printf("ft_strcpy: %s", ft_strcpy(dest, src));
+	printf("%s | ", tab);
+	printf("strcpy: %s\n", strcpy(dest, src));
+}
+
+void print_strcmp(const char *s1, const char *s2) {
+	char *diff_str = strcmp(s1, s2) ? " (diff)" : "";
+	char *tab = strcmp(s1, s2) ? "\t" : "\t\t";
+
+	printf("ft_strcmp%s: %d\t", diff_str, ft_strcmp(s1, s2));
+	printf("%s | ", tab);
+	printf("strcmp%s: %d\n", diff_str, strcmp(s1, s2));
+}
+
+void print_errno(int err, int err2) {
+	if (err != 0 || err2 != 0)
+	{
+		printf("errno: %d (%s)", err, strerror(err));
+		printf("\t | ");
+		printf("errno: %d (%s)\n", err2, strerror(err2));
+		errno = 0;
+	}
+}
+
+void print_returns(ssize_t ret, ssize_t ret2) {
+	printf("Return value: %ld", ret);
+	printf("\t\t | ");
+	printf("Return value: %ld\n", ret2);
+}
+
+int open_fd_write(const char *file) {
+	int fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0) {
+		perror("open outfile");
+		exit(1);
+	}
+	return fd;
+}
+
+void print_write_aux(ssize_t w_ret, ssize_t w_ret2, int err, int err2) {
+	print_returns(w_ret, w_ret2);
+	print_errno(err, err2);
+	printf("\n");
+}
+
+// void print_write(ssize_t w_ret, ssize_t w_ret2, int fd, int fd2, char *buf, char *buf2) {
+// 	printf("ft_write: (in %s)\t\t", file);
+// 	printf(" | ");
+// 	printf("write: (in %s)\n", file2);
+// 	w_ret = ft_write(fd, s, strlen(s));
+// 	int err = errno;
+// 	w_ret2 = write(fd2, s, strlen(s));
+// 	int err2 = errno;
+// 	print_write_aux(w_ret, w_ret2, err, err2);
+// }
+
+int open_fd_read(const char *file) {
+	int fd = open(file, O_RDONLY);
+	if (fd < 0)
+	{
+		perror("open infile");
+		exit(1);
+	}
+	return fd;
+}
+
+void print_read_aux(ssize_t r_ret, ssize_t r_ret2, int err, int err2, char *buf, char *buf2) {
+	buf[r_ret] = '\0';
+	buf2[r_ret2] = '\0';
+
+	printf("Buffer: %s", buf);
+	printf("\t\t | ");
+	printf("Buffer: %s\n", buf2);
+
+	print_returns(r_ret, r_ret2);
+	print_errno(err, err2);
+	printf("\n");
+}
+
+
+
+void print_strdup(char *s) {
+	char *dup = ft_strdup(s);
+	char *dup2 = strdup(s);
+	char *tab = strcmp(s, "") ? "" : "\t\t";
+
+	printf("ft_strdup: %s", dup);
+	printf("%s | ", tab);
+	printf("strdup: %s\n", dup2);
+	free(dup);
+	free(dup2);
+}
+
 void print_list(t_list *list) {
 	t_list *tmp = list;
 	while (tmp) {
@@ -8,135 +110,133 @@ void print_list(t_list *list) {
 	}
 }
 
-void print_write(ssize_t w_ret, char *str, int is_file) {
-	if (w_ret < 0)
-		perror(str);
-	else if (is_file)
-		printf("Return value (file): %ld\n", w_ret);
-	else
-		printf("Return value: %ld\n", w_ret);
-}
-
-void print_read(ssize_t r_ret, char *buf, char *str) {
-	if (r_ret >= 0) {
-		buf[r_ret] = '\0';
-		printf("Buffer: %sReturn value: %ld\n", buf, r_ret);
-	} else {
-		perror(str);
+void free_list(t_list *list) {
+	while (list)
+	{
+		t_list *tmp = list;
+		list = list->next;
+		free(tmp->data);
+		free(tmp);
 	}
 }
 
 int main() {
-	char	src[] = "Hello, world!\n";
+	char	src[] = "Hello, world!";
+	char	*src2 = "";
 	char	dest[20];
-	char	dest2[20];
-	
-	int		cmp;
 
 	char	*file = "test.txt";
+	char	*file2 = "test2.txt";
 	int		fd;
+	int		fd2;
+	int		err;
+	int		err2;
 	ssize_t	w_ret;
+	ssize_t	w_ret2;
 
 	ssize_t	r_ret;
+	ssize_t	r_ret2;
 	char	buf[50];
-
-	char	*dup;
-	char	*dup2;
-	char	*dup3;
+	char	buf2[50];
 
 	t_list	*list = NULL;
+
+	errno = 0;
 
 	printf("===== MANDATORY TESTS =====\n");
 
 	// ft_strlen
 	printf("-------- ft_strlen --------\n");
-	printf("ft_strlen: %lu\n", ft_strlen(src));
-
-	printf("strlen: %lu\n", strlen(src));
+	print_strlen(src);
+	print_strlen(src2);
 	printf("\n");
 
 	// ft_strcpy
 	printf("-------- ft_strcpy --------\n");
-	printf("ft_strcpy: %s", ft_strcpy(dest, src));
-
-	printf("strcpy: %s", strcpy(dest2, src));
+	print_strcpy(dest, src);
+	print_strcpy(dest, src2);
 	printf("\n");
 
 	// ft_strcmp
 	printf("-------- ft_strcmp --------\n");
-	printf("ft_strcmp: %d\n", ft_strcmp(src, dest));
-	printf("ft_strcmp (diff): %d\n", ft_strcmp(src, "Hello"));
-	printf("\n");
-
-	printf("strcmp: %d\n", strcmp(src, dest2));
-	printf("strcmp (diff): %d\n", strcmp(src, "Hello"));
+	strcpy(dest, src);
+	print_strcmp(src, dest);
+	print_strcmp(src, "Hello");
+	print_strcmp(src, src2);
 	printf("\n");
 
 	// ft_write
 	printf("-------- ft_write ---------\n");
-	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd < 0) {
-		perror("open outfile");
-		return (1);
-	}
 	write(1, "ft_write: ", 11);
-	w_ret = ft_write(1, src, ft_strlen(src));
-	print_write(w_ret, "ft_write" , 0);
-	w_ret = ft_write(fd, src, ft_strlen(src));
-	print_write(w_ret, "ft_write to file", 1);
-	printf("\n");
-
+	w_ret = ft_write(1, src, strlen(src));
+	err = errno;
+	write(1, "\t\t | ", 5);
 	write(1, "write: ", 7);
-	w_ret = write(1, src, ft_strlen(src));
-	print_write(w_ret, "write", 0);
-	w_ret = write(fd, src, ft_strlen(src));
-	print_write(w_ret, "write to file", 1);
+	w_ret2 = write(1, src, strlen(src));
+	err2 = errno;
+	write(1, "\n", 1);
+	print_write(w_ret, w_ret2, err, err2);
+
+	fd = open_fd_write(file);
+	fd2 = open_fd_write(file2);
+	printf("ft_write: (in %s)\t\t", file);
+	printf(" | ");
+	printf("write: (in %s)\n", file2);
+	w_ret = ft_write(fd, src, strlen(src));
+	err = errno;
+	w_ret2 = write(fd2, src, strlen(src));
+	err2 = errno;
+	print_write(w_ret, w_ret2, err, err2);
 	close(fd);
-	printf("\n");
+	close(fd2);
+
+	printf("ft_write: (wrong fd)\t\t");
+	printf(" | ");
+	printf("write: (wrong fd)\n");
+	w_ret = ft_write(12, src, strlen(src));
+	err = errno;
+	w_ret2 = write(12, src, strlen(src));
+	err2 = errno;
+	print_write(w_ret, w_ret2, err, err2);
 
 	// ft_read
 	printf("--------- ft_read ---------\n");
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-	{
-		perror("open infile");
-		return (1);
-	}
-	printf("Type something\n");
 	write(1, "ft_read: ", 9);
 	r_ret = ft_read(0, buf, sizeof(buf)-1);
-	print_read(r_ret, buf, "ft_read");
-	printf("ft_read from file:\n");
-	r_ret = ft_read(fd, buf, sizeof(buf)-1);
-	print_read(r_ret, buf, "ft_read from file");
-	close(fd);
-	printf("\n");
-
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-	{
-		perror("open infile");
-		return (1);
-	}
-	printf("Type something\n");
+	err = errno;
+	write(1, "\t\t | ", 5);
 	write(1, "read: ", 6);
-	r_ret = read(0, buf, sizeof(buf)-1);
-	print_read(r_ret, buf, "read");
-	printf("read from file:\n");
-	r_ret = read(fd, buf, sizeof(buf)-1);
-	print_read(r_ret, buf, "read from file");
+	r_ret2 = read(0, buf2, sizeof(buf2)-1);
+	err2 = errno;
+	write(1, "\n", 1);
+	print_read(r_ret, r_ret2, err, err2, buf, buf2);;
+
+	fd = open_fd_read(file);
+	fd2 = open_fd_read(file2);
+	printf("ft_read: (from %s)\t", file);
+	printf(" | ");
+	printf("read: (from %s)\n", file2);
+	r_ret = ft_read(fd, buf, sizeof(buf)-1);
+	err = errno;
+	r_ret2 = read(fd2, buf2, sizeof(buf2)-1);
+	err2 = errno;
+	print_read(r_ret, r_ret2, err, err2, buf, buf2);
 	close(fd);
-	printf("\n");
+	close(fd2);
+
+	printf("ft_read: (wrong fd)\t\t");
+	printf(" | ");
+	printf("read: (wrong fd)\n");
+	r_ret = ft_read(12, buf, sizeof(buf)-1);
+	err = errno;
+	r_ret2 = read(12, buf2, sizeof(buf2)-1);
+	err2 = errno;
+	print_read(r_ret, r_ret2, err, err2, buf, buf2);
 
 	// ft_strdup
 	printf("-------- ft_strdup --------\n");
-	dup = ft_strdup(src);
-	printf("ft_strdup: %s", dup);
-	free(dup);
-
-	dup2 = strdup(src);
-	printf("strdup: %s", dup2);
-	free(dup2);
+	print_strdup(src);
+	print_strdup(src2);
 	printf("\n");
 		
 	printf("\n===== BONUS TESTS =====\n");
@@ -154,12 +254,9 @@ int main() {
 
 	// ft_list_push_front
 	printf("--- ft_list_push_front ----\n");
-	dup = ft_strdup("First");
-	dup2 = ft_strdup("Second");
-	dup3 = ft_strdup("Third");
-	ft_list_push_front(&list, dup);
-	ft_list_push_front(&list, dup2);
-	ft_list_push_front(&list, dup3);
+	ft_list_push_front(&list, strdup("First"));
+	ft_list_push_front(&list, strdup("Second"));
+	ft_list_push_front(&list, strdup("Third"));
 	print_list(list);
 	printf("\n");
 
@@ -180,13 +277,7 @@ int main() {
 	print_list(list);
 	printf("\n");
 
-	while (list)
-	{
-		t_list *tmp = list;
-		list = list->next;
-		free(tmp->data);
-		free(tmp);
-	}
+	free_list(list);
 
 	return (0);
 }

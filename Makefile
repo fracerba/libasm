@@ -32,11 +32,7 @@ bonus: .bonus
 
 all: ${NAME}
 
-test: re
-	gcc ${CFLAGS} mandatory.c -L. -lasm -o ${EXE}
-	./${EXE}
-
-test_all: fclean bonus
+test: fclean bonus
 	gcc ${CFLAGS} main.c -L. -lasm -o ${EXE}
 	./${EXE}
 
@@ -49,4 +45,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus test test_all
+.PHONY: all clean fclean re bonus test

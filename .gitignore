@@ -1,5 +1,7 @@
 *.o
 *.a
+.bonus
 C/
-main
+test
 test.txt
+test2.txt
