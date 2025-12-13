@@ -2,6 +2,4 @@
 *.a
 .bonus
 C/
-test
-test.txt
-test2.txt
+test*

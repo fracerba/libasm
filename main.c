@@ -24,8 +24,7 @@ void print_strcmp(const char *s1, const char *s2) {
 }
 
 void print_errno(int err, int err2) {
-	if (err != 0 || err2 != 0)
-	{
+	if (err != 0 || err2 != 0) {
 		printf("errno: %d (%s)", err, strerror(err));
 		printf("\t | ");
 		printf("errno: %d (%s)\n", err2, strerror(err2));
@@ -54,21 +53,25 @@ void print_write_aux(ssize_t w_ret, ssize_t w_ret2, int err, int err2) {
 	printf("\n");
 }
 
-// void print_write(ssize_t w_ret, ssize_t w_ret2, int fd, int fd2, char *buf, char *buf2) {
-// 	printf("ft_write: (in %s)\t\t", file);
-// 	printf(" | ");
-// 	printf("write: (in %s)\n", file2);
-// 	w_ret = ft_write(fd, s, strlen(s));
-// 	int err = errno;
-// 	w_ret2 = write(fd2, s, strlen(s));
-// 	int err2 = errno;
-// 	print_write_aux(w_ret, w_ret2, err, err2);
-// }
+void print_write(char *str, char *file, char *file2, char *s, int fd, int fd2) {
+	ssize_t	w_ret;
+	ssize_t	w_ret2;
+	int		err;
+	int		err2;
+
+	printf("ft_write: (%s%s)\t\t", str, file);
+	printf(" | ");
+	printf("write: (%s%s)\n", str, file2);
+	w_ret = ft_write(fd, src, strlen(src));
+	err = errno;
+	w_ret2 = write(fd2, src, strlen(src));
+	err2 = errno;
+	print_write_aux(w_ret, w_ret2, err, err2);
+}
 
 int open_fd_read(const char *file) {
 	int fd = open(file, O_RDONLY);
-	if (fd < 0)
-	{
+	if (fd < 0) {
 		perror("open infile");
 		exit(1);
 	}
@@ -88,7 +91,23 @@ void print_read_aux(ssize_t r_ret, ssize_t r_ret2, int err, int err2, char *buf,
 	printf("\n");
 }
 
+void print_read(char *str, char *file, int fd, int fd2) {
+	ssize_t	r_ret;
+	ssize_t	r_ret2;
+	int		err;
+	int		err2;
+	char	buf[50];
+	char	buf2[50];
 
+	printf("ft_read: (%s%s)\t", str, file);
+	printf(" | ");
+	printf("read: (%s%s)\n", str, file);
+	r_ret = ft_read(fd, buf, sizeof(buf)-1);
+	err = errno;
+	r_ret2 = read(fd2, buf2, sizeof(buf2)-1);
+	err2 = errno;
+	print_read_aux(r_ret, r_ret2, err, err2, buf, buf2);
+}
 
 void print_strdup(char *s) {
 	char *dup = ft_strdup(s);
@@ -111,8 +130,7 @@ void print_list(t_list *list) {
 }
 
 void free_list(t_list *list) {
-	while (list)
-	{
+	while (list) {
 		t_list *tmp = list;
 		list = list->next;
 		free(tmp->data);
@@ -167,71 +185,41 @@ int main() {
 
 	// ft_write
 	printf("-------- ft_write ---------\n");
-	write(1, "ft_write: ", 11);
+	write(1, "ft_write: ", 10);
 	w_ret = ft_write(1, src, strlen(src));
 	err = errno;
-	write(1, "\t\t | ", 5);
-	write(1, "write: ", 7);
+	write(1, "\t\t | write: ", 12);
 	w_ret2 = write(1, src, strlen(src));
 	err2 = errno;
 	write(1, "\n", 1);
-	print_write(w_ret, w_ret2, err, err2);
+	print_write_aux(w_ret, w_ret2, err, err2);
 
 	fd = open_fd_write(file);
 	fd2 = open_fd_write(file2);
-	printf("ft_write: (in %s)\t\t", file);
-	printf(" | ");
-	printf("write: (in %s)\n", file2);
-	w_ret = ft_write(fd, src, strlen(src));
-	err = errno;
-	w_ret2 = write(fd2, src, strlen(src));
-	err2 = errno;
-	print_write(w_ret, w_ret2, err, err2);
+	print_write("in ", file, file2, src, fd, fd2);
 	close(fd);
 	close(fd2);
 
-	printf("ft_write: (wrong fd)\t\t");
-	printf(" | ");
-	printf("write: (wrong fd)\n");
-	w_ret = ft_write(12, src, strlen(src));
-	err = errno;
-	w_ret2 = write(12, src, strlen(src));
-	err2 = errno;
-	print_write(w_ret, w_ret2, err, err2);
+	print_write("wrong fd", "", "", src, 12, 12);
 
 	// ft_read
 	printf("--------- ft_read ---------\n");
 	write(1, "ft_read: ", 9);
 	r_ret = ft_read(0, buf, sizeof(buf)-1);
 	err = errno;
-	write(1, "\t\t | ", 5);
-	write(1, "read: ", 6);
+	write(1, "\t\t | read: ", 11);
 	r_ret2 = read(0, buf2, sizeof(buf2)-1);
 	err2 = errno;
 	write(1, "\n", 1);
-	print_read(r_ret, r_ret2, err, err2, buf, buf2);;
+	print_read_aux(r_ret, r_ret2, err, err2, buf, buf2);
 
 	fd = open_fd_read(file);
-	fd2 = open_fd_read(file2);
-	printf("ft_read: (from %s)\t", file);
-	printf(" | ");
-	printf("read: (from %s)\n", file2);
-	r_ret = ft_read(fd, buf, sizeof(buf)-1);
-	err = errno;
-	r_ret2 = read(fd2, buf2, sizeof(buf2)-1);
-	err2 = errno;
-	print_read(r_ret, r_ret2, err, err2, buf, buf2);
+	fd2 = open_fd_read(file);
+	print_read("from ", file, fd, fd2);
 	close(fd);
 	close(fd2);
 
-	printf("ft_read: (wrong fd)\t\t");
-	printf(" | ");
-	printf("read: (wrong fd)\n");
-	r_ret = ft_read(12, buf, sizeof(buf)-1);
-	err = errno;
-	r_ret2 = read(12, buf2, sizeof(buf2)-1);
-	err2 = errno;
-	print_read(r_ret, r_ret2, err, err2, buf, buf2);
+	print_read("wrong fd", "", 12, 12);
 
 	// ft_strdup
 	printf("-------- ft_strdup --------\n");
