@@ -34,6 +34,7 @@ all: ${NAME}
 
 test: fclean bonus
 	gcc ${CFLAGS} main.c -L. -lasm -o ${EXE}
+	clear
 	./${EXE}
 
 clean: 

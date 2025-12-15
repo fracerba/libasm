@@ -59,13 +59,22 @@ void print_write(char *str, char *file, char *file2, char *s, int fd, int fd2) {
 	int		err;
 	int		err2;
 
-	printf("ft_write: (%s%s)\t\t", str, file);
-	printf(" | ");
-	printf("write: (%s%s)\n", str, file2);
-	w_ret = ft_write(fd, src, strlen(src));
+	if (fd == 1)
+		write(1, "ft_write: ", 10);
+	else
+		printf("ft_write: (%s%s)\t\t", str, file);
+	w_ret = ft_write(fd, s, strlen(s));
 	err = errno;
-	w_ret2 = write(fd2, src, strlen(src));
+	if (fd2 == 1)
+		write(1, "\t\t | write: ", 12);
+	else {
+		printf(" | ");
+		printf("write: (%s%s)\n", str, file2);
+	}
+	w_ret2 = write(fd2, s, strlen(s));
 	err2 = errno;
+	if (fd2 == 1)
+		write(1, "\n", 1);
 	print_write_aux(w_ret, w_ret2, err, err2);
 }
 
@@ -99,13 +108,23 @@ void print_read(char *str, char *file, int fd, int fd2) {
 	char	buf[50];
 	char	buf2[50];
 
-	printf("ft_read: (%s%s)\t", str, file);
-	printf(" | ");
-	printf("read: (%s%s)\n", str, file);
+	if (fd == 0)
+		write(1, "ft_read: ", 9);
+	else
+		printf("ft_read: (%s%s)      \t", str, file);
+	
 	r_ret = ft_read(fd, buf, sizeof(buf)-1);
 	err = errno;
+	if (fd2 == 0)
+		write(1, "\t\t | read: ", 11);
+	else {
+		printf(" | ");
+		printf("read: (%s%s)\n", str, file);
+	}
 	r_ret2 = read(fd2, buf2, sizeof(buf2)-1);
 	err2 = errno;
+	if (fd2 == 0)
+		write(1, "\n", 1);
 	print_read_aux(r_ret, r_ret2, err, err2, buf, buf2);
 }
 
@@ -147,15 +166,6 @@ int main() {
 	char	*file2 = "test2.txt";
 	int		fd;
 	int		fd2;
-	int		err;
-	int		err2;
-	ssize_t	w_ret;
-	ssize_t	w_ret2;
-
-	ssize_t	r_ret;
-	ssize_t	r_ret2;
-	char	buf[50];
-	char	buf2[50];
 
 	t_list	*list = NULL;
 
@@ -185,14 +195,7 @@ int main() {
 
 	// ft_write
 	printf("-------- ft_write ---------\n");
-	write(1, "ft_write: ", 10);
-	w_ret = ft_write(1, src, strlen(src));
-	err = errno;
-	write(1, "\t\t | write: ", 12);
-	w_ret2 = write(1, src, strlen(src));
-	err2 = errno;
-	write(1, "\n", 1);
-	print_write_aux(w_ret, w_ret2, err, err2);
+	print_write("", "", "", src, 1, 1);
 
 	fd = open_fd_write(file);
 	fd2 = open_fd_write(file2);
@@ -204,14 +207,7 @@ int main() {
 
 	// ft_read
 	printf("--------- ft_read ---------\n");
-	write(1, "ft_read: ", 9);
-	r_ret = ft_read(0, buf, sizeof(buf)-1);
-	err = errno;
-	write(1, "\t\t | read: ", 11);
-	r_ret2 = read(0, buf2, sizeof(buf2)-1);
-	err2 = errno;
-	write(1, "\n", 1);
-	print_read_aux(r_ret, r_ret2, err, err2, buf, buf2);
+	print_read("", "", 0, 0);
 
 	fd = open_fd_read(file);
 	fd2 = open_fd_read(file);
@@ -227,7 +223,7 @@ int main() {
 	print_strdup(src2);
 	printf("\n");
 		
-	printf("\n===== BONUS TESTS =====\n");
+	printf("===== BONUS TESTS =====\n");
 
 	// ft_atoi_base
 	printf("------ ft_atoi_base -------\n");

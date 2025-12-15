@@ -1,5 +1,4 @@
 *.o
 *.a
 .bonus
-C/
 test*
