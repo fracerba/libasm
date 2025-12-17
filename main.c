@@ -157,12 +157,6 @@ void free_list(t_list *list) {
 	}
 }
 
-void debug_swap(void *data1, void *data2, int cmp_result) {
-	printf("Comparing: '%s' vs '%s' -> %d %s\n", 
-		(char *)data1, (char *)data2, cmp_result,
-		cmp_result > 0 ? "[SWAP]" : "[NO SWAP]");
-}
-
 int main() {
 	char	src[] = "Hello, world!";
 	char	*src2 = "";
@@ -248,6 +242,7 @@ int main() {
 	ft_list_push_front(&list, strdup("Second"));
 	ft_list_push_front(&list, strdup("Third"));
 	ft_list_push_front(&list, strdup("Fourth"));
+	ft_list_push_front(&list, strdup("Fifth"));
 	print_list(list);
 	printf("\n");
 

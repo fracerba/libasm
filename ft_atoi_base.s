@@ -66,7 +66,6 @@ ft_atoi_base:
     neg     r9                  ; sign = -1
 .handle_plus:
     inc     rcx                 ; skip sign character
-    jmp     .check_num          ; continue parsing number
 .check_num:
     mov     al, [rdi + rcx]     ; al = str[rcx]
     test    al, al              ; if (al == 0)
